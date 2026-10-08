@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "docker_install": "PASS",
+  "api": {
+    "http_registration": "PASS",
+    "idempotence": "PASS",
+    "version_preservation": "PASS",
+    "restart_persistence": "PASS",
+    "outside_package_store": "PASS"
+  },
+  "runtime_image_id": "sha256:9d7e8482a295689eac77bdd19253d95c098842af031cc792ae2cc3b6079724e1"
+}

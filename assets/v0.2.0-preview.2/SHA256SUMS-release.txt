@@ -1,0 +1,2 @@
+b08c5dd9e0f65ec278d1c9fea68254af3c687c260d74ebe52d92d774ee68a03b  omindos-navigation-0.2.0-preview.2-linux-amd64.tar
+da52a43e29895467469a548f18d2c01ecddc66f3f97d978385f1309c8a82e2da  parameter-api-source.tar.gz

@@ -1,56 +1,51 @@
-# OmindOS Navigation 0.2.0-preview.1
+# OmindOS Navigation 0.2.0-preview.2
 
-**统一导航预览版 · Linux amd64。** 项目负责人已于 2026-10-08 确认继承代码可对外发行。
-来源和确认记录见 `PUBLICATION_STATUS.md`。
+[下载完整安装包与校验文件](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release/releases/tag/v0.2.0-preview.2)
 
-一个安装包提供差速轮式、全向轮式、四足机身速度三种配置。三者共用 ROS 2 Humble
-导航入口、建图/定位/路径规划示例、速度限制与超时停机逻辑。
+统一导航与参数 API 预览版。客户按“URDF → 电机 → 其他参数”提交配置，无需修改系统源码。
 
-## 安装及运行
+## 安装
 
-解压完整发行包，进入解压后的目录。在有 Docker 的 Linux x86_64 主机执行：
+完整包适用于 Linux x86_64，需已安装 Docker、Python 3.10 或更新版本及 Bash。参数 API 仅用 Python 标准库。解压后：
 
 ```bash
-chmod +x omindos
 ./omindos verify
 ./omindos install
 ./omindos test
 ./omindos preview quadruped
 ```
 
-轮式分别使用 `./omindos preview wheeled_diff` 和 `./omindos preview wheeled_omni`。
-`test` 自动运行单元/ROS 消息测试与三种平台的到达目标、连续零指令检查，完成后退出。
-`preview` 保持运行并输出日志；按 Ctrl-C 停止。此次不提供三维图形界面。
-Docker 需要当前账户已有使用权限；安装器不会修改用户组、宿主网络或宿主 ROS。
+轮式使用 `wheeled_diff` 或 `wheeled_omni`。导航环境与 preview.1 完全相同，包内已包含镜像，安装无需联网。`test` 包含 13 项参数/配置测试、20 项原导航测试和三平台仿真。
 
-镜像随完整发行包提供，安装和测试无需访问 Docker Hub 或下载旧 v0.1 运行包。
-校验失败会在导入镜像或启动容器之前退出；安装后还核对精确镜像 ID。
-运行限制为隔离网络、1 GiB 内存、最多 2 CPU，不挂载硬件或宿主文件系统。
+## 提交本机参数
 
-## 本版支持范围
+```bash
+./omindos api --store "$HOME/omindos-robot-configurations" --port 8085
+```
 
-| 配置 | 已实现 | 尚未包含 |
-| --- | --- | --- |
-| 差速轮式 | 前后/转向机身速度，横移拒绝，平面仿真 | 真实底盘、电机、制动验收 |
-| 全向轮式 | 前后/横移/转向机身速度，平面仿真 | 全向规划优化、真实轮系验收 |
-| 四足 | 同一导航核心与机身速度配置，平面仿真 | 步态、平衡、关节、足端接触、CAN、实机验收 |
+保留该终端，在另一终端提交自己的请求文件：
 
-本版使用原生 Python 二维示例节点；没有声明 ROS2/C++ 三维链已运行。
-仿真建图使用预设采样位姿。到达目标的误差和耗时仅用于该演示验收，不能作为实体产品指标。
-任何配置都不能直接作为真实机器人运动驱动。
+```bash
+curl --fail-with-body -X POST http://127.0.0.1:8085/v1/robot-profiles \
+  -H 'Content-Type: application/json' --data-binary @robot-parameters.json
+curl --fail-with-body http://127.0.0.1:8085/v1/robot-profiles/PROFILE_ID
+```
 
-## 包内组成
+第一次可用 `examples/robot-parameters.synthetic.json` 熟悉接口；这是合成机构样例，不是客户机器人标定值。修改参数后重新提交得到新编号；相同参数得到同一编号。按旧编号仍可读取旧版，服务重启后继续使用同一存储目录。Ctrl-C 停止服务。升级只需解压新版并沿用包目录以外的配置存储目录；卸载可删除解压目录，客户配置独立保留。
 
-- `omindos`：统一安装、校验、测试和预览入口。
-- `omindos-navigation-0.2.0-preview.1-linux-amd64.tar.gz`：完整 Docker save 压缩镜像。
-- `IMAGE_ID`、`SHA256SUMS`：精确镜像标识和文件完整性校验。
-- `MANIFEST.json`：版本、基础镜像、来源提交、平台及发布状态。
-- `VALIDATION.json`：独立镜像的测试结果。
-- `SOURCE_FILES.sha256`、`OS_PACKAGES.tsv`：应用源码校验与系统包清单。
-- `PUBLICATION_STATUS.md`：来源与发行确认记录。
+[参数 API 字段与调用说明](docs/ROBOT_PARAMETER_API.zh-CN.md) · [客户参数填写指南](docs/CUSTOMER_ROBOT_CONFIGURATION.zh-CN.md) · [MEVIUS2 原版仿真记录](docs/MEVIUS2_INTEGRATION.zh-CN.md)
 
-- `LICENSE`、`NOTICE`：应用许可证、原维护者和本次修改说明。
-- `application-source.tar.gz`：本版实际构建的应用源码、Dockerfile 和验证脚本。
+## 本版范围
 
-旧 v0.1 标签、镜像及资产保持不变。本版的“支持”限于统一导航接口与平面仿真，
-不表示任何实体底盘或四足步态已经验收。
+| 功能 | 状态 |
+| --- | --- |
+| URDF 与电机参数校验、提交、版本保存、按编号读取 | 已提供，本机 HTTP 服务 |
+| 差速、全向、四足机身速度导航预览 | 包含原 preview.1 平面仿真环境 |
+| MEVIUS2 原版起身、站立、行走、归零验证 | 提供脚本与已有记录；模型、权重及 MuJoCo/PyTorch 依赖需另备 |
+| 参数启用到 ROS 2 控制端 | 尚未接通，返回 runtime_applied=false |
+| 三维可视化调参界面 | 此包未包含 |
+| 客户模型、真实机器人步态/平衡/电机验收 | 尚未完成 |
+
+API 只监听 127.0.0.1，不自动启动控制器，不发送电机命令。当前接收独立旋转关节与固定连接；任意 URDF 自动训练、网格下载、闭环机构转换不在本版范围。原版 MEVIUS2 仿真记录不等于本包 ROS 2 联调或客户实机结果。
+
+`runtime/` 原样保留 preview.1 的镜像、源码、许可证、系统组件清单与校验文件。根目录 `MANIFEST.json`、`VALIDATION.json`、`SOURCE_FILES.sha256` 和 `SHA256SUMS` 记录此次新增部分；第三方通知见 `LICENSES/`。旧版本的标签与资产未改动。

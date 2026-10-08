@@ -1,0 +1,57 @@
+{
+  "version": "0.2.0-preview.2",
+  "archive": "omindos-navigation-0.2.0-preview.2-linux-amd64.tar",
+  "bytes": 265492480,
+  "sha256": "b08c5dd9e0f65ec278d1c9fea68254af3c687c260d74ebe52d92d774ee68a03b",
+  "parameter_source_archive": "parameter-api-source.tar.gz",
+  "parameter_source_sha256": "da52a43e29895467469a548f18d2c01ecddc66f3f97d978385f1309c8a82e2da",
+  "publication_status": "approved_preview",
+  "fresh_extraction_install": "PASS",
+  "fresh_api_restart_persistence": "PASS",
+  "tamper_rejected_before_tests": "PASS",
+  "validation": {
+    "status": "PASS",
+    "parameter_configuration_tests": 13,
+    "navigation_tests": 20,
+    "platforms": {
+      "wheeled_diff": {
+        "status": "PASS",
+        "elapsed_sec": 25.01,
+        "occupied_cells": 529,
+        "free_cells": 7520,
+        "path_poses": 29,
+        "localization_error_m": 0.123,
+        "goal_error_m": 0.226,
+        "motion_seen": true,
+        "stopped_sec": 1.13
+      },
+      "wheeled_omni": {
+        "status": "PASS",
+        "elapsed_sec": 25.01,
+        "occupied_cells": 529,
+        "free_cells": 7520,
+        "path_poses": 29,
+        "localization_error_m": 0.123,
+        "goal_error_m": 0.225,
+        "motion_seen": true,
+        "stopped_sec": 1.73
+      },
+      "quadruped": {
+        "status": "PASS",
+        "elapsed_sec": 29.01,
+        "occupied_cells": 525,
+        "free_cells": 7521,
+        "path_poses": 29,
+        "localization_error_m": 0.077,
+        "goal_error_m": 0.212,
+        "motion_seen": true,
+        "stopped_sec": 1.21
+      }
+    },
+    "navigation_runtime_unchanged": true,
+    "hardware_validated": false,
+    "ros2_profile_activation_tested": false,
+    "mevius2_reference_evidence": "docs/validation/mevius2-reference-20261008.json",
+    "mevius2_evidence_note": "Previously recorded upstream simulation, not rerun as part of this package and not an API integration test."
+  }
+}

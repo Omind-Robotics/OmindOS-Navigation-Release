@@ -15,3 +15,10 @@ on 2026-10-08. This records the distribution confirmation; it does not replace
 existing authorship or make a new claim about the upstream copyright holder.
 See LICENSE for Apache License, Version 2.0. System dependencies keep their
 respective licenses, including the notices installed under /usr/share/doc.
+
+OmindOS Navigation 0.2.0-preview.2 adds a local parameter registry, customer
+configuration checks, documentation and packaging. Navigation runtime remains
+the byte-for-byte preview.1 runtime. The MEVIUS2 validation script adapts
+observation/control conventions from Kento Kawaharazuka (2025); its MIT
+notice is retained in LICENSES/MEVIUS2-MIT.txt. No upstream model, policy
+weights, CAN driver or IsaacGym tools are included in this package.

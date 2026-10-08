@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "parameter_configuration_tests": 13,
+  "navigation_tests": 20,
+  "platforms": {
+    "wheeled_diff": {
+      "status": "PASS",
+      "elapsed_sec": 25.01,
+      "occupied_cells": 529,
+      "free_cells": 7520,
+      "path_poses": 29,
+      "localization_error_m": 0.123,
+      "goal_error_m": 0.226,
+      "motion_seen": true,
+      "stopped_sec": 1.13
+    },
+    "wheeled_omni": {
+      "status": "PASS",
+      "elapsed_sec": 25.01,
+      "occupied_cells": 529,
+      "free_cells": 7520,
+      "path_poses": 29,
+      "localization_error_m": 0.123,
+      "goal_error_m": 0.225,
+      "motion_seen": true,
+      "stopped_sec": 1.73
+    },
+    "quadruped": {
+      "status": "PASS",
+      "elapsed_sec": 29.01,
+      "occupied_cells": 525,
+      "free_cells": 7521,
+      "path_poses": 29,
+      "localization_error_m": 0.077,
+      "goal_error_m": 0.212,
+      "motion_seen": true,
+      "stopped_sec": 1.21
+    }
+  },
+  "navigation_runtime_unchanged": true,
+  "hardware_validated": false,
+  "ros2_profile_activation_tested": false,
+  "mevius2_reference_evidence": "docs/validation/mevius2-reference-20261008.json",
+  "mevius2_evidence_note": "Previously recorded upstream simulation, not rerun as part of this package and not an API integration test."
+}

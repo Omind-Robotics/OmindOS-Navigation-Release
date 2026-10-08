@@ -1,12 +1,10 @@
 # OmindOS Navigation 0.2.0-preview.1
 
 **统一导航预览版 · Linux amd64。** 项目负责人已于 2026-10-08 确认继承代码可对外发行。
-来源和确认记录见 [发行确认记录](docs/PUBLICATION_STATUS.md)。
+来源和确认记录见 `PUBLICATION_STATUS.md`。
 
 一个安装包提供差速轮式、全向轮式、四足机身速度三种配置。三者共用 ROS 2 Humble
 导航入口、建图/定位/路径规划示例、速度限制与超时停机逻辑。
-
-[下载完整安装包和 SHA256 校验文件](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release/releases/tag/v0.2.0-preview.1)
 
 ## 安装及运行
 

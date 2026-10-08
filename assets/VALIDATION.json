@@ -1,0 +1,43 @@
+{
+  "test_count": 20,
+  "test_result": "PASS",
+  "platforms": {
+    "wheeled_diff": {
+      "status": "PASS",
+      "elapsed_sec": 25.01,
+      "occupied_cells": 529,
+      "free_cells": 7520,
+      "path_poses": 29,
+      "localization_error_m": 0.123,
+      "goal_error_m": 0.226,
+      "motion_seen": true,
+      "stopped_sec": 1.02
+    },
+    "wheeled_omni": {
+      "status": "PASS",
+      "elapsed_sec": 24.51,
+      "occupied_cells": 527,
+      "free_cells": 7519,
+      "path_poses": 29,
+      "localization_error_m": 0.123,
+      "goal_error_m": 0.227,
+      "motion_seen": true,
+      "stopped_sec": 1.17
+    },
+    "quadruped": {
+      "status": "PASS",
+      "elapsed_sec": 28.51,
+      "occupied_cells": 543,
+      "free_cells": 7515,
+      "path_poses": 29,
+      "localization_error_m": 0.123,
+      "goal_error_m": 0.245,
+      "motion_seen": true,
+      "stopped_sec": 1.23
+    }
+  },
+  "hardware_validated": false,
+  "scope": "planar_kinematic_preview",
+  "network": "none",
+  "image_id": "sha256:9d7e8482a295689eac77bdd19253d95c098842af031cc792ae2cc3b6079724e1"
+}

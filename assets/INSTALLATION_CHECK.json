@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "fresh_archive_extraction": true,
+  "docker_load_and_exact_image_id": true,
+  "profiles_after_install": true,
+  "modified_file_rejected_before_docker": true
+}

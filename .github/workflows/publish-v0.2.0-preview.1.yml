@@ -12,7 +12,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -21,23 +21,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Retrieve immutable validated bundle
+      - name: Validate recorded runtime and test evidence
         shell: bash
         run: |
-          set -euo pipefail
-          mkdir assets
-          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 30 --max-time 900 \
-            https://omindos.cn/downloads/navigation/v0.2.0-preview.1/omindos-navigation-0.2.0-preview.1-linux-amd64.tar \
-            -o assets/omindos-navigation-0.2.0-preview.1-linux-amd64.tar
-          printf '%s  %s\n' cb5977638d80635bc0bc8002bfdfae9e431f723fdf9e151c8c8a9e51c84e1a3f \
-            omindos-navigation-0.2.0-preview.1-linux-amd64.tar > assets/SHA256SUMS-release.txt
-          (cd assets && sha256sum --strict --check SHA256SUMS-release.txt)
-          mkdir extracted
-          tar -xf assets/omindos-navigation-0.2.0-preview.1-linux-amd64.tar -C extracted
-          (cd extracted/omindos-navigation-0.2.0-preview.1 && bash omindos verify)
-          cp extracted/omindos-navigation-0.2.0-preview.1/VALIDATION.json assets/
-          cp extracted/omindos-navigation-0.2.0-preview.1/application-source.tar.gz assets/
-      - name: Publish pre-release without replacing an existing tag
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('assets')
+          summary=json.loads((root/'RELEASE_SUMMARY.json').read_text())
+          validation=json.loads((root/'VALIDATION.json').read_text())
+          installation=json.loads((root/'INSTALLATION_CHECK.json').read_text())
+          assert summary['sha256']=='cb5977638d80635bc0bc8002bfdfae9e431f723fdf9e151c8c8a9e51c84e1a3f'
+          assert summary['publication_status']=='approved_preview'
+          assert validation['test_result']=='PASS' and validation['test_count']==20
+          assert all(v['status']=='PASS' and v['stopped_sec']>=1 for v in validation['platforms'].values())
+          assert validation['image_id']==summary['image_id']
+          assert installation['status']=='PASS'
+          assert (root/'application-source.tar.gz').stat().st_size==25408
+          PY
+      - name: Publish pre-release with independent runtime download
         shell: bash
         run: |
           set -euo pipefail

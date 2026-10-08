@@ -2,7 +2,11 @@
 
 **本版为导航接口与平面运动学预览，不含四足步态、平衡或真实硬件驱动，未完成实机验收。**
 
-下载下面的完整 `.tar` 安装包和 `SHA256SUMS-release.txt`，在已安装 Docker 的 Linux x86_64 主机执行：
+[下载完整离线安装包（约 265 MB）](https://omindos.cn/downloads/navigation/v0.2.0-preview.1/omindos-navigation-0.2.0-preview.1-linux-amd64.tar) · [SHA256 校验文件](https://omindos.cn/downloads/navigation/v0.2.0-preview.1/SHA256SUMS-release.txt)
+
+完整 Docker 安装包托管在 OmindOS 下载服务器；下方 GitHub 附件提供应用源码、校验文件及验证报告。GitHub 自动生成的 Source code 压缩包不是离线安装包。
+
+在已安装 Docker 的 Linux x86_64 主机执行：
 
 ```bash
 sha256sum -c SHA256SUMS-release.txt

@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "timestamp_utc": "2026-10-08T04:52:14.157426+00:00",
+  "archive": "omindos-navigation-0.2.0-preview.2-linux-amd64.tar",
+  "archive_bytes": 265492480,
+  "archive_sha256": "b08c5dd9e0f65ec278d1c9fea68254af3c687c260d74ebe52d92d774ee68a03b",
+  "origin_https_full_sha256": "b08c5dd9e0f65ec278d1c9fea68254af3c687c260d74ebe52d92d774ee68a03b",
+  "public_head_status": 200,
+  "public_range_checks": [
+    {
+      "offset": 0,
+      "bytes": 1024,
+      "status": "PASS"
+    },
+    {
+      "offset": 132746240,
+      "bytes": 1024,
+      "status": "PASS"
+    },
+    {
+      "offset": 265491456,
+      "bytes": 1024,
+      "status": "PASS"
+    }
+  ],
+  "public_parameter_source_sha256": "da52a43e29895467469a548f18d2c01ecddc66f3f97d978385f1309c8a82e2da",
+  "github_runner_full_download": "TLS connection reset; release uses GitHub-hosted parameter source and recorded origin/installation verification",
+  "public_full_transfer_note": "Full public transfer exceeded the 120-second test timeout at 70188751 bytes; complete origin HTTPS transfer verified separately."
+}

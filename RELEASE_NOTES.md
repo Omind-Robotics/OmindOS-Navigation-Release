@@ -22,3 +22,5 @@ cd omindos-navigation-0.2.0-preview.2
 完整包：265492480 字节；SHA256：`b08c5dd9e0f65ec278d1c9fea68254af3c687c260d74ebe52d92d774ee68a03b`。
 参数源码 SHA256：`da52a43e29895467469a548f18d2c01ecddc66f3f97d978385f1309c8a82e2da`。
 旧版标签、镜像和资产未改动。
+
+下载核验补充：源站 HTTPS 全量文件校验通过，公开地址 HEAD 与首/中/末字节范围核验通过。GitHub 托管节点连接外部下载服务器时发生 TLS 重置，因此参数源码直接作为 GitHub 附件提供；完整安装包仍由 OmindOS 下载服务器提供。见附件 DOWNLOAD_CHECK.json。

@@ -12,7 +12,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -21,33 +21,42 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Run parameter and customer profile tests
-        run: python3 -m unittest discover -s tests -v
-      - name: Verify downloadable package and recorded acceptance
+      - name: Verify packaged source and origin acceptance evidence
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/omindos-preview2
-          cd /tmp/omindos-preview2
-          base=https://omindos.cn/downloads/navigation/v0.2.0-preview.2
-          curl --ipv4 --fail --location --retry 3 --retry-all-errors --max-time 240 "$base/omindos-navigation-0.2.0-preview.2-linux-amd64.tar" -o 'omindos-navigation-0.2.0-preview.2-linux-amd64.tar'
-          curl --ipv4 --fail --location --retry 3 --retry-all-errors --max-time 60 "$base/parameter-api-source.tar.gz" -o parameter-api-source.tar.gz
-          sha256sum --strict --check "$GITHUB_WORKSPACE/assets/v0.2.0-preview.2/SHA256SUMS-release.txt"
-          tar -xf 'omindos-navigation-0.2.0-preview.2-linux-amd64.tar'
-          cd omindos-navigation-0.2.0-preview.2
-          ./omindos verify
           python3 - <<'PY'
-          import json
+          import hashlib,json,tarfile
           from pathlib import Path
-          val=json.loads(Path('VALIDATION.json').read_text())
-          assert val['status']=='PASS'
-          assert val['parameter_configuration_tests']==13 and val['navigation_tests']==20
+          root=Path('assets/v0.2.0-preview.2')
+          summary=json.loads((root/'RELEASE_SUMMARY.json').read_text())
+          val=json.loads((root/'VALIDATION.json').read_text())
+          install=json.loads((root/'INSTALLATION_CHECK.json').read_text())
+          download=json.loads((root/'DOWNLOAD_CHECK.json').read_text())
+          archive=root/'parameter-api-source.tar.gz'
+          assert hashlib.sha256(archive.read_bytes()).hexdigest()==summary['parameter_source_sha256']=='da52a43e29895467469a548f18d2c01ecddc66f3f97d978385f1309c8a82e2da'
+          assert summary['sha256']==download['origin_https_full_sha256']=='b08c5dd9e0f65ec278d1c9fea68254af3c687c260d74ebe52d92d774ee68a03b'
+          assert summary['publication_status']=='approved_preview'
+          assert val['status']=='PASS' and val['parameter_configuration_tests']==13 and val['navigation_tests']==20
           assert all(p['status']=='PASS' and p['stopped_sec']>=1 for p in val['platforms'].values())
-          check=json.loads(Path('INSTALLATION_CHECK.json').read_text())
-          assert check['status']=='PASS' and all(v=='PASS' for v in check['api'].values())
-          assert json.loads(Path('MANIFEST.json').read_text())['runtime_applied'] is False
+          assert install['status']=='PASS' and all(v=='PASS' for v in install['api'].values())
+          assert all(summary[k]=='PASS' for k in ('fresh_extraction_install','fresh_api_restart_persistence','tamper_rejected_before_tests'))
+          assert download['status']=='PASS' and download['public_head_status']==200
+          assert all(p['status']=='PASS' for p in download['public_range_checks'])
+          assert download['public_parameter_source_sha256']==summary['parameter_source_sha256']
+          with tarfile.open(archive) as tar:
+              tar.extractall('/tmp/omindos-preview2-source',filter='data')
+          source=Path('/tmp/omindos-preview2-source/omindos-parameter-api')
+          manifest=json.loads((source/'MANIFEST.json').read_text())
+          assert manifest['runtime_applied'] is False and manifest['hardware_validated'] is False
+          for relative, expected in manifest['source_files'].items():
+              path=source/relative
+              if path.is_file() and relative!='README.md':
+                  assert hashlib.sha256(path.read_bytes()).hexdigest()==expected, relative
           PY
-      - name: Publish immutable version entry
+      - name: Test exact parameter source archive
+        run: python3 -m unittest discover -s /tmp/omindos-preview2-source/omindos-parameter-api/tests -v
+      - name: Publish version entry and verified API source
         shell: bash
         run: |
           set -euo pipefail
@@ -55,7 +64,7 @@ jobs:
             echo 'Release already exists; refusing to overwrite it.'
             exit 1
           fi
-          gh release create "$VERSION" assets/v0.2.0-preview.2/* /tmp/omindos-preview2/parameter-api-source.tar.gz \
+          gh release create "$VERSION" assets/v0.2.0-preview.2/* \
             --target "$GITHUB_SHA" --prerelease \
             --title 'OmindOS Navigation 0.2.0-preview.2 · 参数 API 与统一导航预览' \
             --notes-file RELEASE_NOTES.md

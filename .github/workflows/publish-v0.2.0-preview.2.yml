@@ -30,8 +30,8 @@ jobs:
           mkdir -p /tmp/omindos-preview2
           cd /tmp/omindos-preview2
           base=https://omindos.cn/downloads/navigation/v0.2.0-preview.2
-          curl --fail --location --retry 3 --max-time 240 "$base/omindos-navigation-0.2.0-preview.2-linux-amd64.tar" -o 'omindos-navigation-0.2.0-preview.2-linux-amd64.tar'
-          curl --fail --location --retry 3 --max-time 60 "$base/parameter-api-source.tar.gz" -o parameter-api-source.tar.gz
+          curl --ipv4 --fail --location --retry 3 --retry-all-errors --max-time 240 "$base/omindos-navigation-0.2.0-preview.2-linux-amd64.tar" -o 'omindos-navigation-0.2.0-preview.2-linux-amd64.tar'
+          curl --ipv4 --fail --location --retry 3 --retry-all-errors --max-time 60 "$base/parameter-api-source.tar.gz" -o parameter-api-source.tar.gz
           sha256sum --strict --check "$GITHUB_WORKSPACE/assets/v0.2.0-preview.2/SHA256SUMS-release.txt"
           tar -xf 'omindos-navigation-0.2.0-preview.2-linux-amd64.tar'
           cd omindos-navigation-0.2.0-preview.2

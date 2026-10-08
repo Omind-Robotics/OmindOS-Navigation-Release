@@ -1,0 +1,50 @@
+name: Publish verified unified preview
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-v0.2.0-preview.1.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-v0.2.0-preview.1
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      VERSION: v0.2.0-preview.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Retrieve immutable validated bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir assets
+          curl --fail --location --retry 2 --connect-timeout 20 --max-time 300 \
+            https://omindos.cn/downloads/navigation/v0.2.0-preview.1/omindos-navigation-0.2.0-preview.1-linux-amd64.tar \
+            -o assets/omindos-navigation-0.2.0-preview.1-linux-amd64.tar
+          printf '%s  %s\n' cb5977638d80635bc0bc8002bfdfae9e431f723fdf9e151c8c8a9e51c84e1a3f \
+            omindos-navigation-0.2.0-preview.1-linux-amd64.tar > assets/SHA256SUMS-release.txt
+          (cd assets && sha256sum --strict --check SHA256SUMS-release.txt)
+          mkdir extracted
+          tar -xf assets/omindos-navigation-0.2.0-preview.1-linux-amd64.tar -C extracted
+          (cd extracted/omindos-navigation-0.2.0-preview.1 && bash omindos verify)
+          cp extracted/omindos-navigation-0.2.0-preview.1/VALIDATION.json assets/
+          cp extracted/omindos-navigation-0.2.0-preview.1/application-source.tar.gz assets/
+      - name: Publish pre-release without replacing an existing tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "Release already exists; refusing to overwrite it."
+            exit 1
+          fi
+          gh release create "$VERSION" assets/* --target "$GITHUB_SHA" \
+            --prerelease --title 'OmindOS Navigation 0.2.0-preview.1 · 轮式 / 四足统一导航预览' \
+            --notes-file RELEASE_NOTES.md

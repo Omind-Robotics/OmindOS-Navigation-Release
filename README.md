@@ -1,5 +1,11 @@
 # OmindOS Navigation 0.2.0-preview.2
 
+> **发行入口已迁移（2026-10-09）**
+>
+> 后续版本、下载与使用指南请访问 **[新的发行仓库](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release)** · **[全部发行版本](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release/releases)**。
+>
+> 本仓库保留历史说明与发行记录。已同步的版本：[v0.2.0-preview.2](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release/releases/tag/v0.2.0-preview.2) · [v0.2.0-preview.1](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release/releases/tag/v0.2.0-preview.1)。
+
 [下载完整安装包与校验文件](https://github.com/maganrobotics-boop/OmindOS-Navigation-Release/releases/tag/v0.2.0-preview.2)
 
 统一导航与参数 API 预览版。客户按“URDF → 电机 → 其他参数”提交配置，无需修改系统源码。

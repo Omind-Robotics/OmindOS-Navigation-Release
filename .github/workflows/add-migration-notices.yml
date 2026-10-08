@@ -1,0 +1,26 @@
+name: Add release migration notices
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-migration-notices.yml'
+      - 'scripts/add_migration_notices.py'
+      - 'migration-notice/releases.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: add-release-migration-notices
+  cancel-in-progress: false
+jobs:
+  update-notices:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Add notices and verify original releases are preserved
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/add_migration_notices.py
